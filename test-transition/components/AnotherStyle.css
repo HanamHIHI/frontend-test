@@ -3,5 +3,7 @@
 }
 .end{
     opacity:1; /* 보임 */
-    transition: opacity 0.5s; /* 천천히 보임 */
+    /* color: aqua; */
+    transition: opacity 2s; /* 천천히 보임 */
+    /* transition-timing-function: "ease"; */
 }
