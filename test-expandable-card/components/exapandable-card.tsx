@@ -20,20 +20,25 @@ export function ExpandableCard() {
   const [expandedCardId, setExpandedCardId] = useState<number | null>(null);
 
   const handleCardClick = (id: number) => {
-    // 클릭된 카드가 이미 열려 있으면 닫고, 그렇지 않으면 열기
     setExpandedCardId(prev => (prev === id ? null : id));
   };
 
-  // useTransition을 사용하여 카드가 열리고 닫히는 애니메이션을 처리
   const transitions = useTransition(expandedCardId, {
     from: { opacity: 0, height: 0 },
-    enter: { opacity: 1, height: 100 }, // 카드가 열릴 때
-    leave: { opacity: 0, height: 0 }, // 카드가 닫힐 때
-    config: { tension: 200, friction: 20 },
+    enter: { opacity: 1, height: 150 }, // 원하는 높이로 설정
+    leave: { opacity: 0, height: 0 },
+    config: {
+        duration: 300, // 애니메이션의 지속 시간 설정
+    },
     onRest: () => {
-      // 애니메이션 완료 후에 상태 변경
-    }
-  });
+        if (expandedCardId === null) {
+            // 애니메이션이 끝난 후에만 상태를 업데이트
+            setExpandedCardId(null);
+        }
+    },
+});
+
+
 
   return (
     <div className="space-y-4">
@@ -46,17 +51,24 @@ export function ExpandableCard() {
             </CardContent>
           </Card>
 
-          {/* 클릭된 카드만 펼쳐지고 닫힘 */}
-          {transitions((style, item) =>
-            item === card.id ? (
-              <animated.div style={style} className="p-4 border rounded-md bg-gray-100">
-                <h3 className="font-medium">{card.title}</h3>
-                <p>{card.content}</p>
-              </animated.div>
-            ) : null
+          {/* useTransition을 이용해 컴포넌트의 마운트 및 언마운트를 제어 */}
+          {transitions(
+            (style, item) =>
+              item === card.id && (
+                <animated.div
+                  style={{
+                    ...style,
+                    overflow: 'hidden',
+                  }}
+                  className="p-4 border rounded-md bg-gray-100"
+                >
+                  <h3 className="font-medium">{card.title}</h3>
+                  <p>{card.content}</p>
+                </animated.div>
+              )
           )}
         </div>
       ))}
     </div>
   );
-}
+};
