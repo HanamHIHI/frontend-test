@@ -18,7 +18,7 @@ const Map = () => {
   useEffect(() => {
       naver.maps.Service.geocode(
         {
-          query: "서울특별시 강남구 삼성로 212",
+          query: "서울특별시 중구 세종대로 110",
         },
         function (status, response) {
           const result = response.v2.addresses[0];
