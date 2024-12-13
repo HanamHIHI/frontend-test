@@ -1,6 +1,4 @@
-"use client";
 import { useEffect } from "react";
-import Script from "next/script";
 
 const Map = () => {
   const initMap = (x: number, y: number) => {
@@ -13,26 +11,28 @@ const Map = () => {
       position: new naver.maps.LatLng(x, y),
       map: map,
     });
+
+    naver.maps.Event.once(map, 'init', function () {
+      var customControl = new naver.maps.CustomControl('<a href="" class="btn_mylct"><img src="/current-circle-blue.svg" width="7%" height="7%" style="margin: 0 0 22.4px 10px"></img></a>', {
+        position: naver.maps.Position.LEFT_BOTTOM
+      });
+      customControl.setMap(map);
+
+      naver.maps.Event.addDOMListener(customControl.getElement(), 'click', function () {
+        map.setCenter(new naver.maps.LatLng(37.4996157705058, 127.065915414443));
+      });
+    });
   };
 
   useEffect(() => {
-      naver.maps.Service.geocode(
-        {
-          query: "서울특별시 중구 세종대로 110",
-        },
-        function (status, response) {
-          const result = response.v2.addresses[0];
-          const x = Number(result.x);
-          const y = Number(result.y);
-
-          initMap(y, x);
-        }
-      );
+    const x = 127.065915414443;
+    const y = 37.4996157705058;
+    initMap(y, x);
   }, []);
 
   return (
     <>
-      <div id="my-comp" style={{ height: "200px" }}></div>
+      <div id="my-comp" style={{ height: "800px", width: "800px" }}></div>
     </>
   );
 };
